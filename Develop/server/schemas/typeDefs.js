@@ -8,31 +8,34 @@ const typeDefs = gql`
     username: String
     email: String
     bookCount: Int
-    savedBooks: [Book]
+    savedBooks: [Book]!
   }
 
   type Book {
     _id: ID
-    authors: String
+    authors: [String]
     description: String
-    bookId: String
+    bookId: ID
     image: String
     link: String
     title: String
   }
 
+  type Auth {
+    token: ID!
+    user: User
+  }
   type Query {
     me: User
     users: [User]
     user(username: String!): User
-    // thoughts(username: String): [Thought]
-    // thought(_id: ID!): Thought
+  
   }
 
   input SaveBookInput {
-    authors: String
+    authors: [String]
     description: String
-    bookId: String
+    bookId: ID
     image: String
     link: String
     title: String
@@ -45,11 +48,8 @@ const typeDefs = gql`
     removeBook(bookId: String):User
   }
 
-  type Auth {
-    token: ID!
-    user: User
-  }
+
 `;
 
 // export the typeDefs
-module.exports = typeDefs;
+module.exports = typeDefs

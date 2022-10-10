@@ -6,39 +6,39 @@ const resolvers = {
   Query: {
     me: async (parent, args, context) => {
       if (context.user) {
-        const userData = await User.findOne({ _id: context.user._id })
-          .select("-__v -password")
-          .populate("books");
+        const userData = await User.findOne({ _id: context.user._id });
+        //   .select("-__v -password")
+        //   .populate("books");
 
-        return userData;
+        // return userData;
       }
 
       throw new AuthenticationError("Not logged in");
     },
 
-    books: async (parent, { username }) => {
-      const params = username ? { username } : {};
-      return Book.find(params).sort({ createdAt: -1 });
-    },
+    // books: async (parent, { username }) => {
+    //   const params = username ? { username } : {};
+    //   return Book.find(params).sort({ createdAt: -1 });
+    // },
 
     // place this inside of the `Query` nested object right after `thoughts`
-    book: async (parent, { _id }) => {
-      return Book.findOne({ _id });
-    },
+    // book: async (parent, { _id }) => {
+    //   return Book.findOne({ _id });
+    // },
 
-    // get all users
-    users: async () => {
-      return User.find().select("-__v -password").populate("books");
-    },
-    // get a user by username
-    user: async (parent, { username }) => {
-      return User.findOne({ username })
-        .select("-__v -password")
-        .populate("books");
-    },
+    // // get all users
+    // users: async () => {
+    //   return User.find().select("-__v -password").populate("books");
+    // },
+    // // get a user by username
+    // user: async (parent, { username }) => {
+    //   return User.findOne({ username })
+    //     .select("-__v -password")
+    //     .populate("books");
+    // },
   },
   Mutation: {
-    addBook: async (parent, { input }, context) => {
+    saveBook: async (parent, { input }, context) => {
       if (context.user) {
         const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },

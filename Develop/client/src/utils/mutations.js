@@ -22,32 +22,41 @@ export const ADD_USER = gql`
     }
   }
 `;
-
+//First we are declaring a mutation, in the mutation we will define the mutation that will receive the book information to save.
 export const SAVE_BOOK = gql`
-  mutation saveBook($authors: [String], $description: String,  $bookId: String
+  mutation saveBook(
+    $authors: [String]
+    $description: String
+    $bookId: String
     $image: String
     $link: String
-    $title: String {  
-    saveBook(authors: $authors, description: $description, 
-       bookId: $bookId,
-      image: $image,
+    $title: String
+  ) {
+    saveBook(
+      authors: $authors
+      description: $description
+      bookId: $bookId
+      image: $image
       link: $link
-      title: $title){
-           _id
-           username
-           email
-           password
-           bookCount
-           savedBooks{
-      authors
-      description
-      bookId
-      image
-      link
-      title
+      title: $title
+    ) {
+      _id
+      username
+      email
+      password
+      bookCount
+      savedBooks {
+        authors
+        description
+        bookId
+        image
+        link
+        title
+      }
     }
   }
-  `;
+`;
+
 export const REMOVE_BOOK = gql`
   mutation removeBook($bookId: ID!) {
     removeBook(bookId: $bookId) {
