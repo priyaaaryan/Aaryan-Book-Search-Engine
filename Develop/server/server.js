@@ -15,6 +15,8 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: authMiddleware,
+  introspection: process.env.NODE_ENV !== 'production'
+  
 });
 
 const app = express();
