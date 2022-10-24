@@ -6,11 +6,11 @@ const resolvers = {
   Query: {
     me: async (parent, args, context) => {
       if (context.user) {
-        const userData = await User.findOne({ _id: context.user._id });
-        //   .select("-__v -password")
-        //   .populate("books");
+        const userData = await User.findOne({ _id: context.user._id })
+          //.select("-__v -password")
+          .populate("books");
 
-        // return userData;
+        return userData;
       }
 
       throw new AuthenticationError("Not logged in");
@@ -39,13 +39,15 @@ const resolvers = {
   },
   Mutation: {
     saveBook: async (parent, { input }, context) => {
+      console.log("input=", input);
+
       if (context.user) {
         const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
-          { $addToSet: { books: input } },
+          { $addToSet: { savedBooks: input } },
           { new: true }
-        ).populate("books");
-
+        );
+        console.log("UPDATED USER NEW BOOK=", updatedUser);
         return updatedUser;
       }
 
@@ -53,10 +55,28 @@ const resolvers = {
     },
 
     removeBook: async (parent, { bookId }, context) => {
-      if (context.user) {
-        const deleteBook = await Book.findOneAndDelete({ bookId: bookId });
+      // if (context.user) {
+      //   const deleteBook = await Book.findOneAndDelete({ bookId: bookId });
 
-        return deleteBook;
+      //   return deleteBook;
+      // }
+
+      console.log("bookId=", bookId);
+
+      if (context.user) {
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: context.user._id },
+          {
+            $pull: {
+              savedBooks: {
+                bookId: bookId,
+              },
+            },
+          },
+          { new: true }
+        );
+        console.log("UPDATED USER REM BOOK=", updatedUser);
+        return updatedUser;
       }
 
       throw new AuthenticationError("You need to be logged in!");
@@ -87,6 +107,7 @@ const resolvers = {
       return { token, user };
     },
     login: async (parent, { email, password }) => {
+      console.log("login email=", email);
       const user = await User.findOne({ email });
 
       if (!user) {

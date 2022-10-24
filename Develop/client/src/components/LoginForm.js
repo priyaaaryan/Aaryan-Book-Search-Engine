@@ -25,6 +25,7 @@ const LoginForm = () => {
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
+      console.log("Validation error in login");
     }
 
     try {
